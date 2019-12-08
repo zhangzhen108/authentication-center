@@ -1,0 +1,11 @@
+package com.zz.authentication.center.api.service;
+
+/**
+ * @author lvhaibao
+ * @description
+ * @date 2019/1/2 0002 10:50
+ */
+public interface SmsCodeSender {
+
+    void send(String mobile, String code);
+}

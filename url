@@ -1,0 +1,4 @@
+获取code：http://127.0.0.1:9004/oauth/authorize?response_type=code&client_id=client_1&redirect_uri=http://baidu.com&state=test&scope=all
+
+
+获取accessToken:
