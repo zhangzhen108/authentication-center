@@ -3,6 +3,7 @@ package com.zz.authentication.center.api.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -65,15 +66,15 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 //                .authenticationManager(authenticationManager)
 //                .allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST);
 
-        DefaultTokenServices tokenServices = new DefaultTokenServices();
-        tokenServices.setAccessTokenValiditySeconds(60*1);
-         tokenServices.setRefreshTokenValiditySeconds(60*2);
-        tokenServices.setSupportRefreshToken(true);
-        tokenServices.setReuseRefreshToken(false);
-        tokenServices.setTokenEnhancer(tokenEnhancerChain);
-        tokenServices.setAuthenticationManager(authenticationManager);
-        tokenServices.setTokenStore(tokenStore());
-        endpoints.tokenServices(tokenServices);
+//        DefaultTokenServices tokenServices = new DefaultTokenServices();
+//        tokenServices.setAccessTokenValiditySeconds(60*1);
+//         tokenServices.setRefreshTokenValiditySeconds(60*2);
+//        tokenServices.setSupportRefreshToken(true);
+//        tokenServices.setReuseRefreshToken(false);
+//        tokenServices.setTokenEnhancer(tokenEnhancerChain);
+//        tokenServices.setAuthenticationManager(authenticationManager);
+//        tokenServices.setTokenStore(tokenStore());
+        endpoints.tokenServices(defaultAuthorizationServerTokenServices());
         super.configure(endpoints);
     }
 
@@ -121,14 +122,20 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 //        converter.setAccessTokenConverter(new CustomerAccessTokenConverter());
         return converter;
     }
-//    @Bean
-//    public AuthorizationServerTokenServices tokenServices() {
-//        DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
-//        defaultTokenServices.setAccessTokenValiditySeconds(60*1);
-//        defaultTokenServices.setRefreshTokenValiditySeconds(60*2);
-//        defaultTokenServices.setSupportRefreshToken(true);
-//        defaultTokenServices.setReuseRefreshToken(false);
-//        defaultTokenServices.setTokenStore(tokenStore());
-//        return defaultTokenServices;
-//    }
+    @Bean
+    @Primary
+    public AuthorizationServerTokenServices defaultAuthorizationServerTokenServices() {
+        TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
+        tokenEnhancerChain.setTokenEnhancers(
+                Arrays.asList(tokenEnhancer(), accessTokenConverter()));
+        DefaultTokenServices tokenServices = new DefaultTokenServices();
+        tokenServices.setAccessTokenValiditySeconds(60*1);
+        tokenServices.setRefreshTokenValiditySeconds(60*2);
+        tokenServices.setSupportRefreshToken(true);
+        tokenServices.setReuseRefreshToken(false);
+        tokenServices.setTokenEnhancer(tokenEnhancerChain);
+        tokenServices.setAuthenticationManager(authenticationManager);
+        tokenServices.setTokenStore(tokenStore());
+        return tokenServices;
+    }
 }
