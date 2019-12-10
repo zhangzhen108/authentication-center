@@ -74,7 +74,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 //        tokenServices.setTokenEnhancer(tokenEnhancerChain);
 //        tokenServices.setAuthenticationManager(authenticationManager);
 //        tokenServices.setTokenStore(tokenStore());
-        endpoints.tokenServices(defaultAuthorizationServerTokenServices());
+        //endpoints.tokenServices(defaultAuthorizationServerTokenServices());
         super.configure(endpoints);
     }
 
@@ -123,19 +123,14 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         return converter;
     }
     @Bean
-    @Primary
-    public AuthorizationServerTokenServices defaultAuthorizationServerTokenServices() {
-        TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
-        tokenEnhancerChain.setTokenEnhancers(
-                Arrays.asList(tokenEnhancer(), accessTokenConverter()));
-        DefaultTokenServices tokenServices = new DefaultTokenServices();
-        tokenServices.setAccessTokenValiditySeconds(60*1);
-        tokenServices.setRefreshTokenValiditySeconds(60*2);
-        tokenServices.setSupportRefreshToken(true);
-        tokenServices.setReuseRefreshToken(false);
-        tokenServices.setTokenEnhancer(tokenEnhancerChain);
-        tokenServices.setAuthenticationManager(authenticationManager);
-        tokenServices.setTokenStore(tokenStore());
-        return tokenServices;
+    public DefaultTokenServices tokenServices() {
+        DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
+        defaultTokenServices.setTokenStore(tokenStore());
+        defaultTokenServices.setAccessTokenValiditySeconds(60*10);
+        defaultTokenServices.setRefreshTokenValiditySeconds(60*20);
+        defaultTokenServices.setReuseRefreshToken(false);
+        defaultTokenServices.setSupportRefreshToken(true);
+        return defaultTokenServices;
+
     }
 }

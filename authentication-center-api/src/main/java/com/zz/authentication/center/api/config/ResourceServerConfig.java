@@ -164,8 +164,13 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     }
     @Bean
     public DefaultTokenServices tokenServices() {
-        final DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
+        DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
         defaultTokenServices.setTokenStore(tokenStore());
+        defaultTokenServices.setAccessTokenValiditySeconds(60*10);
+        defaultTokenServices.setRefreshTokenValiditySeconds(60*20);
+        defaultTokenServices.setReuseRefreshToken(false);
+        defaultTokenServices.setSupportRefreshToken(true);
         return defaultTokenServices;
+
     }
 }

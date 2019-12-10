@@ -53,7 +53,32 @@ public class UserDetailsServiceImpl implements UserDetailsService,SocialUserDeta
             });
         return collection;
     }
-    private LoginUser getUserDetail(String s){
+    private LoginUser getUserDetail(String username){
+        if(username==null){
+            throw new UsernameNotFoundException("登录失败");
+        }
+        UserDTO userDTO=new UserDTO();
+        userDTO.setUsername("asd");
+        userDTO.setId(1234);
+        userDTO.setPassword("$2a$10$Wtw81uu43fGKw9lkOr1RAOTNWxQIZBsB3YDwc/5yDnr/yeG5x92EG");
+        userDTO.setEnabled(true);
+        if(userDTO==null){
+            throw new UsernameNotFoundException("登录失败");
+        }
+        // 可用性 :true:可用 false:不可用
+        boolean enabled = userDTO.getEnabled();
+        // 过期性 :true:没过期 false:过期
+        boolean accountNonExpired = true;
+        // 有效性 :true:凭证有效 false:凭证无效
+        boolean credentialsNonExpired = true;
+        // 锁定性 :true:未锁定 false:已锁定
+        boolean accountNonLocked = true;
+        LoginUser userDetailsDO=new LoginUser(userDTO.getUsername(),userDTO.getPassword(),
+                enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, getAuthority(new ArrayList<>()));
+        userDetailsDO.setUserId(String.valueOf(userDTO.getId()));
+        return userDetailsDO;
+    }
+    private LoginUser getUserDetailSocial(String s){
         if(s==null){
             throw new UsernameNotFoundException("登录失败");
         }

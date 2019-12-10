@@ -7,12 +7,14 @@ import com.zz.authentication.center.api.common.utils.RandomUtil;
 import com.zz.authentication.center.api.service.reference.UserInfoReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.ConnectionSignUp;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -25,6 +27,8 @@ public class DemoConnectionSignUp implements ConnectionSignUp {
 
     @Autowired
     private UserInfoReference userInfoReference;
+    @Resource
+    BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
     public String execute(Connection<?> connection) {
@@ -44,7 +48,8 @@ public class DemoConnectionSignUp implements ConnectionSignUp {
         //当改用户第一次注册没手机号，就提示用手机号绑定
         UserDTO userDTO=new UserDTO();
         userDTO.setUsername("root"+uin);
-        userDTO.setPassword("123456");
+        String password=bCryptPasswordEncoder.encode("123456");
+        userDTO.setPassword(password);
         userDTO.setStatus(CommonStatusEnum.enable.getStatus());
         R<UserDTO> userDTOR= userInfoReference.add(userDTO);
         return String.valueOf(userDTOR.getData().getId());
