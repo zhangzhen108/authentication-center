@@ -49,7 +49,7 @@ public class MyAuthenticationSuccessHandler extends SavedRequestAwareAuthenticat
 
                 log.info("登录成功之后的处理");
         String type = request.getHeader("Accept");
-        if(!type.contains("text/html")){
+        if(type==null||!type.contains("text/html")){
 
             String clientId = "client_1";
             String clientSecret = "$2a$10$ijOPEDarOjkdahi3xpslIu6.cMpBVqYWpbGTkCh0h7Kjt4.NWQwkK";
